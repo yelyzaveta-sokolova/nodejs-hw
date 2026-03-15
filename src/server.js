@@ -23,12 +23,10 @@ app.use(cookieParser());
 
 app.use(notesRoutes);
 app.use(authRoutes);
-app.use("/users", userRoutes);
+app.use(userRoutes);
 
 app.use(notFoundHandler);
-
 app.use(errors());
-
 app.use(errorHandler);
 
 const PORT = process.env.PORT || 3000;

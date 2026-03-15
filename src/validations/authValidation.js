@@ -1,4 +1,4 @@
-import Joi from "joi";
+  import Joi from "joi";
 
 const passwordSchema = Joi.string().min(8).required();
 
@@ -10,7 +10,7 @@ export const registerUserSchema = Joi.object({
 
 export const loginUserSchema = Joi.object({
   email: Joi.string().email().required(),
-  password: passwordSchema,
+  password: Joi.string().required(),
 });
 
 export const requestResetEmailSchema = Joi.object({
