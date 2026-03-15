@@ -1,19 +1,51 @@
 import express from "express";
-import { requestResetEmail, resetPassword } from "../controllers/authController.js";
-import { validateBody } from "../middleware/validateBody.js";
-import { requestResetEmailSchema, resetPasswordSchema } from "../validations/authValidation.js";
+import { celebrate, Segments } from "celebrate";
+
+import {
+  registerUser,
+  loginUser,
+  logoutUser,
+  refreshUserSession,
+  requestResetEmail,
+  resetPassword,
+} from "../controllers/authController.js";
+
+import {
+  registerUserSchema,
+  loginUserSchema,
+  requestResetEmailSchema,
+  resetPasswordSchema,
+} from "../validations/authValidation.js";
 
 const router = express.Router();
 
+
 router.post(
-  "/request-reset-email",
-  validateBody(requestResetEmailSchema),
+  "/auth/register",
+  celebrate({ [Segments.BODY]: registerUserSchema }),
+  registerUser
+);
+
+router.post(
+  "/auth/login",
+  celebrate({ [Segments.BODY]: loginUserSchema }),
+  loginUser
+);
+
+router.post("/auth/logout", logoutUser);
+
+router.post("/auth/refresh", refreshUserSession);
+
+
+router.post(
+  "/auth/request-reset-email",
+  celebrate({ [Segments.BODY]: requestResetEmailSchema }),
   requestResetEmail
 );
 
 router.post(
-  "/reset-password",
-  validateBody(resetPasswordSchema),
+  "/auth/reset-password",
+  celebrate({ [Segments.BODY]: resetPasswordSchema }),
   resetPassword
 );
 
