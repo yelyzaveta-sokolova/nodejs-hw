@@ -1,10 +1,41 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
-const userSchema = new mongoose.Schema({
-  username: { type: String, trim: true },
-  email: { type: String, required: true, unique: true, trim: true },
-  password: { type: String, required: true, minlength: 8 },
-}, { timestamps: true });
+const userSchema = new mongoose.Schema(
+  {
+    username: {
+      type: String,
+      trim: true,
+      lowercase: true,
+    },
+
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      trim: true,
+    },
+
+    password: {
+      type: String,
+      required: true,
+      minlength: 8,
+    },
+
+    avatar: {
+      type: String,
+      default:
+        "https://ac.goit.global/fullstack/react/default-avatar.jpg",
+    },
+  },
+  { timestamps: true }
+);
+
+userSchema.pre("save", function (next) {
+  if (!this.username) {
+    this.username = this.email;
+  }
+  next();
+});
 
 userSchema.methods.toJSON = function () {
   const obj = this.toObject();
@@ -12,11 +43,4 @@ userSchema.methods.toJSON = function () {
   return obj;
 };
 
-userSchema.pre('save', function (next) {
-  if (!this.username) {
-    this.username = this.email;
-  }
-  next();
-});
-
-export const User = mongoose.model('User', userSchema);
+export const User = mongoose.model("User", userSchema);
